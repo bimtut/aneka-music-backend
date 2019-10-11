@@ -1,9 +1,9 @@
-const branchModel = require('../models/branch');
+const model = require('../models/branch');
 const formResponse = require('../helpers/formResponse');
 
 const branchController = {
     getBranch: (req, res) => {
-        branchModel.getBranch()
+        model.getBranch()
         .then(result => {
             formResponse.success(res, 200, result)
         })
@@ -15,9 +15,9 @@ const branchController = {
     addBranch: (req, res) => {
         const location = req.body.location;
 
-        branchModel.addBranch(location)
+        model.addBranch(location)
         .then(result => {
-                branchModel.getLastID()
+                model.getLastID()
                 .then(id => {
                     const data = {
                         id: id[0]['MAX (id)'],
@@ -38,7 +38,7 @@ const branchController = {
         const id = req.params.id;
         const location = req.body.location;
 
-        branchModel.editBranch(id, location)
+        model.editBranch(id, location)
         .then(result => {
             const data = {
                 id,
@@ -54,7 +54,7 @@ const branchController = {
     deleteBranch: (req, res) => {
         const id = req.params.id;
 
-        branchModel.deleteBranch(id)
+        model.deleteBranch(id)
         .then(result => {
             const data = {
                 id

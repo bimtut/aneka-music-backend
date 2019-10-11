@@ -1,11 +1,11 @@
-const itemsModel = require('../models/items');
+const model = require('../models/items');
 const formResponse = require('../helpers/formResponse');
 
 const itemsController = {
     getItemsByCategory: (req, res) => {
         const id = req.params.id;
 
-        itemsModel.getItemsByCategory(id)
+        model.getItemsByCategory(id)
         .then(result => {
             formResponse.success(res, 200, result);
         })
@@ -15,7 +15,7 @@ const itemsController = {
     getItemsByBranch: (req,res) => {
         const id = req.params.id;
 
-        itemsModel.getItemsByBranch(id)
+        model.getItemsByBranch(id)
         .then(result => {
             formResponse.success(res, 200, result);
         })
@@ -25,7 +25,7 @@ const itemsController = {
     getItemsByName: (req,res) => {
         const name = req.params.name;
 
-        itemsModel.getItemsByName(name)
+        model.getItemsByName(name)
         .then(result => {
             formResponse.success(res, 200, result);
         })
@@ -35,9 +35,9 @@ const itemsController = {
     getItemDetails: (req, res) => {
         const id = req.params.id;
 
-        itemsModel.getItemDetails(id)
+        model.getItemDetails(id)
         .then(result => {
-            itemsModel.getItemStock(id)
+            model.getItemStock(id)
             .then(rslt => {
                 result = {
                     ...result[0],
@@ -59,15 +59,15 @@ const itemsController = {
             itemstock: req.body.itemstock
         };
 
-        itemsModel.addItem(body)
+        model.addItem(body)
         .then(result => {
-            itemsModel.getLastID()
+            model.getLastID()
             .then(itemID => {
                 const id = itemID[0]['MAX (id)'];
 
                 const itemstock = body.itemstock;
                 itemstock.map((stock, index) => {
-                    itemsModel.addItemStock(id, stock)
+                    model.addItemStock(id, stock)
                     .then(rslt => {
                         const data = {
                             id,
@@ -96,12 +96,12 @@ const itemsController = {
             itemstock: req.body.itemstock
         };
 
-        await itemsModel.editItem(id,body)
+        await model.editItem(id,body)
         .then(async result => {
             
             const itemstock = body.itemstock;
             
-            await itemsModel.getItemStock(id)
+            await model.getItemStock(id)
             .then(async dbStock => {
                 //check if there are any new branch added
                 if(itemstock.length > dbStock.length){
@@ -130,7 +130,7 @@ const itemsController = {
                     })
                     
                     await newStocks.map(async (newstock, idx) => {
-                       await itemsModel.addItemStock(id, newstock)
+                       await model.addItemStock(id, newstock)
                         .then( async rsult => {
                             if(idx === newStocks.length-1){
                                 //after adding new stock, then updating old stock   
@@ -138,7 +138,7 @@ const itemsController = {
                                 if(oldStocks.length > 0){
 
                                     await oldStocks.map( async (oldstock, index) => {
-                                        await itemsModel.editItemStock(id, oldstock)
+                                        await model.editItemStock(id, oldstock)
                                         .catch(error => {res.json(error);})
                                     })
 
@@ -150,7 +150,7 @@ const itemsController = {
                     })
                 } else { //there is no new stock
                     itemstock.map((stock, index) => {
-                        itemsModel.editItemStock(id, stock)
+                        model.editItemStock(id, stock)
                         .then(rsult => {
                             const data = {
                                 id,
@@ -173,7 +173,7 @@ const itemsController = {
     deleteItem: (req, res) => {
         const id = req.params.id;
         
-        itemsModel.deleteItem(id)
+        model.deleteItem(id)
         .then(result => {
             const data = {
                 id

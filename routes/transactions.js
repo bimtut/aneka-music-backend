@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const transactionsController = require('../controllers/transactions');
+const controller = require('../controllers/transactions');
 const auth = require('../middleware/auth');
 
 router
-    .get('/user/:id', transactionsController.getUserTransactions)
-    .get('/month/:month', transactionsController.getTransactionsByMonth)
-    .post('/:id', transactionsController.newTransaction)
+    .get('/user/:id', controller.getUserTransactions)
+    .get('/month/:month', controller.getTransactionsByMonth)
+    .post('/:id', controller.newTransaction)
 
 module.exports = router;

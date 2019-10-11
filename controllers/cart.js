@@ -1,11 +1,11 @@
-const cartModel = require('../models/cart');
+const model = require('../models/cart');
 const formResponse = require('../helpers/formResponse');
 
 const cartController = {
     getCart: (req, res) => {
         const user = req.params.id;
 
-        cartModel.getCart(user)
+        model.getCart(user)
         .then(result => {
          
             formResponse.success(res, 200, result);
@@ -23,9 +23,9 @@ const cartController = {
              quantity: req.body.quantity
         }
 
-        cartModel.addCart(user, body)
+        model.addCart(user, body)
         .then(result => {
-            cartModel.getOneCart(user, body.item, body.branch)
+            model.getOneCart(user, body.item, body.branch)
             .then(rslt => {
                 const data = {
                     ...rslt[0]
@@ -50,7 +50,7 @@ const cartController = {
              quantity: req.body.quantity
         }
 
-        cartModel.editCart(user, body)
+        model.editCart(user, body)
         .then(result => {
             const data = {
                 user,
@@ -69,7 +69,7 @@ const cartController = {
         const item = req.params.item;
         const branch = req.params.branch;
         
-        cartModel.deleteCart(user, item, branch)
+        model.deleteCart(user, item, branch)
         .then(result => {
             const data = {
                 user,
@@ -87,7 +87,7 @@ const cartController = {
     clearCart: (req, res) => {
         const user = req.params.id;
 
-        cartModel.clearCart(user)
+        model.clearCart(user)
         .then(result => {
             formResponse.success(res, 200, result)
         })

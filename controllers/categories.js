@@ -1,9 +1,9 @@
-const categoriesModel = require("../models/categories");
+const model = require("../models/categories");
 const formResponse = require("../helpers/formResponse");
 
 const categoriesController = {
   getCategories: (req, res) => {
-    categoriesModel
+    model
       .getCategories()
       .then(result => {
         formResponse.success(res, 200, result);
@@ -19,10 +19,10 @@ const categoriesController = {
       image: req.body.image
     };
 
-    categoriesModel
+    model
       .addCategory(body)
       .then(result => {
-        categoriesModel
+        model
           .getLastID()
           .then(id => {
             
@@ -48,7 +48,7 @@ const categoriesController = {
       image: req.body.image
     };
 
-    categoriesModel
+    model
       .editCategory(id, body)
       .then(result => {
         const data = {
@@ -65,7 +65,7 @@ const categoriesController = {
   deleteCategory: (req, res) => {
     const id = req.params.id;
 
-    categoriesModel
+    model
       .deleteCategory(id)
       .then(result => {
         const data = {

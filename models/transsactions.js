@@ -1,4 +1,3 @@
-
 const conn = require('../configs/db');
 
 const transactionsModel = {

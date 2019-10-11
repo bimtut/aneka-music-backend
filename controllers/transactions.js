@@ -1,4 +1,4 @@
-const transactionsModel = require('../models/transsactions');
+const model = require('../models/transsactions');
 const formResponse = require('../helpers/formResponse');
 const async = require('async')
 
@@ -9,7 +9,7 @@ const transactionsController = {
 
         let data = []
 
-        await transactionsModel.getUserTransactions(user)
+        await model.getUserTransactions(user)
         .then(result => {
             data = result
             // let transactions = [];
@@ -36,7 +36,7 @@ const transactionsController = {
         })
 
          data.map((user, index) => {
-            transactionsModel.getTransactionItems(user.id)
+            model.getTransactionItems(user.id)
             .then(result => {
                 data[index] = {
                     ...user,
@@ -71,13 +71,13 @@ const transactionsController = {
     getTransactionsByMonth: (req, res) => {
         const month = req.params.month;
 
-        transactionsModel.getTransactionsByMonth(month)
+        model.getTransactionsByMonth(month)
         .then(result => {
             
             let transactions = [];
             result.map((transaction,index) => {
                
-                transactionsModel.getTransactionItems(transaction.id)
+                model.getTransactionItems(transaction.id)
                 .then(rsult => {
                     transaction = {
                         ...transaction,
@@ -103,15 +103,16 @@ const transactionsController = {
         const user = req.params.id;
         const transactionitems = req.body.transactionitems;
         
-        transactionsModel.newTransaction(user)
+        model.newTransaction(user)
         .then(result => {
-            transactionsModel.getLastID()
+            console.log('nwe trans berhasil. sekarang menuhuju add item...')
+            model.getLastID()
             .then(async id => {
                 id = id[0]['MAX (id)'];
-
+                console.log('akan eksekusi add item')
                 await transactionitems.map(async (item, index) => {
                     
-                    await transactionsModel.addItem(id, item)
+                    await model.addItem(id, item)
                     .then(rsult => {
                         
                         const data = {

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const userModel = require('../models/user');
+const model = require('../models/user');
 const formResponse = require('../helpers/formResponse');
 
 const jwt = require('jsonwebtoken');
@@ -7,7 +7,7 @@ const joi = require('@hapi/joi');
 const crypto = require('crypto-js');
 const secret = process.env.SECRET_KEY;
 
-
+// validasi form
 const formValidation = (data) => {
     const schema = joi.object().keys({
         name: joi.string().min(3).required(),
@@ -42,13 +42,13 @@ const userController = {
         if(isValid){
             body.password = hash(body.password);
     
-            userModel.getUserByEmail(body.email)
+            model.getUserByEmail(body.email)
             .then(result => {
                 if(result.length === 0){
-                    userModel.register(body)
+                    model.register(body)
                     .then(rsult => {
     
-                        userModel.getLastID()
+                        model.getLastID()
                         .then(id => {
                             const data = {
                                 id: id[0]['MAX (id)'],
@@ -83,13 +83,13 @@ const userController = {
 
         body.password = hash(body.password);
 
-        userModel.getUserByEmail(body.email)
+        model.getUserByEmail(body.email)
         .then(result => {
             if(result.length === 0){
-                userModel.register(body)
+                model.register(body)
                 .then(rsult => {
 
-                    userModel.getLastID()
+                    model.getLastID()
                     .then(id => {
                         const data = {
                             id: id[0]['MAX (id)'],
@@ -112,10 +112,10 @@ const userController = {
     login: (req, res) => {
         const email = req.body.email;
         const password = hash(req.body.password)
-        console.log('login ', email, ' ', password);
-        userModel.login(email, password)
+        console.log('cek login doang', email, ' ', password);
+        model.login(email, password)
         .then(result => {
-            
+            console.log('masak iya bisa masuk ?')
             if(result.length !== 0) {
                 const payload = { ...result[0], expiresIn:'1h' };
 
@@ -125,7 +125,7 @@ const userController = {
                         console.error(err)
                     }
              
-                    res.setHeader('Authorization', `Bearer ${token}`);
+                    res.setHeader('authorization', `Bearer ${token}`);
                     // res.json({ token: `Bearer ${token}`})
                     const data = {
                         user: {
@@ -137,6 +137,7 @@ const userController = {
                         },
                         token
                     }
+                    console.log('ini data yang masuk nih ...',data)
                     formResponse.success(res, 200, {} , data)
                 })
             } else {

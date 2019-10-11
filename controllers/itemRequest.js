@@ -1,9 +1,9 @@
-const itemRequestModel = require('../models/itemRequest');
+const model = require('../models/itemRequest');
 const formResponse = require('../helpers/formResponse');
 
 const itemRequestController = {
     getAllRequests : (req, res) => {
-        itemRequestModel.getAllRequests()
+        model.getAllRequests()
         .then(result => {
             formResponse.success(res, 200, result);
         })
@@ -19,9 +19,9 @@ const itemRequestController = {
             email: req.body.email,
         }
 
-        itemRequestModel.newRequest(body)
+        model.newRequest(body)
         .then(result => {
-            itemRequestModel.getLastID()
+            model.getLastID()
             .then(id => {
                 const data = {
                     id: id[0]['MAX (id)'],
@@ -41,7 +41,7 @@ const itemRequestController = {
     requestFulfilled: (req, res) => {
         const id = req.params.id;
 
-        itemRequestModel.requestFulfilled(id)
+        model.requestFulfilled(id)
         .then(result => {
             const data = {
                 id
