@@ -3,7 +3,7 @@ const conn = require('../configs/db');
 const cartModel = {
     getCart: (user) => {
         return new Promise((resolve, reject) => {
-            conn.query('SELECT cart.item as itemID, item.name as item, itemstock.price, cart.branch as branchID, branch.location as branch, cart.quantity FROM cart JOIN itemstock ON itemstock.item = cart.item AND itemstock.branch = cart.branch JOIN item ON itemstock.item = item.id JOIN branch ON itemstock.branch = branch.id  WHERE cart.user=?', user, (err, result) => {
+            conn.query('SELECT cart.item as itemID, item.name as item, itemstock.price, cart.branch as branchID, branch.location as branch, cart.quantity, item.image as image FROM cart JOIN itemstock ON itemstock.item = cart.item AND itemstock.branch = cart.branch JOIN item ON itemstock.item = item.id JOIN branch ON itemstock.branch = branch.id  WHERE cart.user=?', user, (err, result) => {
                 if(!err){
                     resolve(result);
                 } else {
